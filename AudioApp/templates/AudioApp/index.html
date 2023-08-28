@@ -1,0 +1,79 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Detector</title>
+    <!-- Bootstrap CDN -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'AudioApp/css/style.css' %}">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Navbar</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="#">Dashboard <span class="sr-only">(current)</span></a>
+            </li>
+          </ul>
+          <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+          </form>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2>Upload Audio Files</h2>
+        <form method="post" enctype="multipart/form-data" action="">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button type="submit">Upload</button>
+        </form>
+
+        <div class="audio-list">
+            <h3>Your Audio Files</h3>
+            <!-- Loop through audio files here using Flask/Jinja templating -->
+            <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>File Name</th>
+                    <th>Upload Date</th>
+                    <th>File Size</th>
+                    <th>File Extension</th>
+                    <th>Play</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for audio in audio_files %}
+                  <tr>
+                      <td>{{ audio.file.name }}</td>
+                      <td>{{ audio.upload_date }}</td>
+                      <td>{{ audio.file_size }} bytes</td>
+                      <td>{{ audio.file_extension }}</td>
+                      <td><audio controls>
+                          <source src="{{ audio.file.url }}" type="audio/mpeg">
+                          Your browser does not support the audio element.
+                      </audio></td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Custom JS -->
+    <script src="{% static 'AudioApp/js/script.js' %}"></script>
+</body>
+</html>
